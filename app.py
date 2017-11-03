@@ -20,12 +20,12 @@ def link():
 
 @app.route('/pm/<link>')
 def view_pm(link):
-	try:
-		text = messages[link]
-		del messages[link]
-    	return text
+    try:
+        text = messages[link]
+        del messages[link]
+        return text
     except:
-    	return "no messages"	
+        return "no messages"
 
 if __name__ == '__main__':
     app.run(debug=True, use_reloader=True)
