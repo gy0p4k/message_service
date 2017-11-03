@@ -2,6 +2,7 @@ from flask import Flask, render_template, request
 import uuid
 app = Flask(__name__)
 
+base_url = "http://pm-me.herokuapp.com/pm/"
 messages = {}
 
 
@@ -12,18 +13,15 @@ def send_pm():
 
 @app.route('/generate', methods=['POST'])
 def link():
-    text = request.form['message']
     link = uuid.uuid4().hex
-    messages[link] = text
-    return "http://pm-me.herokuapp.com/pm/" + link
+    messages[link] = request.form['message']
+    return base_url + link
 
 
 @app.route('/pm/<link>')
 def view_pm(link):
     try:
-        text = messages[link]
-        del messages[link]
-        return text
+        return message.pop(link)
     except:
         return "no messages"
 
