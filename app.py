@@ -1,18 +1,26 @@
-from flask import Flask
-from datetime import datetime
+from flask import Flask, render_template, request
+import uuid
 app = Flask(__name__)
 
+messages = {}
+
+
 @app.route('/')
-def homepage():
-    the_time = datetime.now().strftime("%A, %d %b %Y %l:%M %p")
+def send_pm():
+    return render_template('text.html')
 
-    return """
-    <h1>Hello heroku</h1>
-    <p>It is currently {time}.</p>
 
-    <img src="http://loremflickr.com/600/400" />
-    """.format(time=the_time)
+@app.route('/generate', methods=['POST'])
+def link():
+    text = request.form['message']
+    link = uuid.uuid4().hex
+    messages[link] = text
+    return "http://pm-me.herokuapp.com/pm/" + link
+
+
+@app.route('/pm/<link>')
+def view_pm(link):
+    return messages[link]
 
 if __name__ == '__main__':
     app.run(debug=True, use_reloader=True)
-
